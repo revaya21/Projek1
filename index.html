@@ -1,11 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIAIAIAIIAAI</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hydroponic Monitoring System - Kelompok 9</title>
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('https://images.unsplash.com/photo-1517758478390-c89333af4642?fm=jpg&q=60&w=3000');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      min-height: 100vh;
+      color: #1a1a1a;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+
+    .logo {
+      height: 60px;
+      width: auto;
+    }
+
+    .title {
+      flex: 1;
+      text-align: center;
+    }
+
+    .title h1 {
+      margin: 0;
+      color: #1a73e8;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    .title h2 {
+      margin: 0.3rem 0 0;
+      color: #5f6368;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+    }
+
+    .card h2 {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+      color: #5f6368;
+      font-weight: 500;
+    }
+
+    .sensor-value {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #1a73e8;
+      margin: 0.5rem 0;
+    }
+
+    .sensor-label {
+      font-size: 0.875rem;
+      color: #5f6368;
+    }
+
+    .controls-card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .control-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .control-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .control-group h3 {
+      margin: 0 0 0.75rem;
+      font-size: 1rem;
+      color: #5f6368;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .status-indicator {
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .status-off {
+      background-color: #fdeced;
+      color: #ea4335;
+    }
+
+    .status-on {
+      background-color: #e6f4ea;
+      color: #137333;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .control-button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .control-button.on {
+      background-color: #137333;
+      color: white;
+    }
+
+    .control-button.off {
+      background-color: #ea4335;
+      color: white;
+    }
+
+    .control-button:hover {
+      opacity: 0.9;
+    }
+
+    .control-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        /* Menyelaraskan konten secara vertikal */
+        justify-content: center;
+        /* Menyelaraskan konten secara horizontal */
+        gap: 2rem;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+        text-align: center;
+        /* Agar teks di dalam title terpusat */
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <div class="container">
+    <header class="header">
+      <img src="http://berkarya.um.ac.id/wp-content/uploads/2018/09/LAMBANG-LOGO-UM-WARNA-TEKS-BIRU-340x129.png"
+        alt="University Logo" class="logo">
+      <div class="title">
+        <h1>Hydroponic Monitoring System</h1>
+        <h2>Kelompok 9</h2>
+      </div>
+    </header>
+
     <div class="container"><h1>Ketika ulangan pengambilan nilai kebugaran jasmani, ada seorang anak yang mengeluhkan bahwasannya fisik ia telah mencapai batas</h1> 
     
         <h1>DISTURBING THE PIECE~~~</h1>
@@ -20,5 +240,161 @@
         <h1>OOIIAIIOOAIAI</h1>
         
     </div>
+
+    <div class="dashboard-grid">
+      <div class="card">
+        <h2>Temperature</h2>
+        <div class="sensor-value" id="temperature">--</div>
+        <div class="sensor-label">Degrees Celsius</div>
+      </div>
+
+      <div class="card">
+        <h2>Humidity</h2>
+        <div class="sensor-value" id="humidity">--</div>
+        <div class="sensor-label">Percentage</div>
+      </div>
+
+      <div class="card">
+        <h2>TDS Level</h2>
+        <div class="sensor-value" id="tds">--</div>
+        <div class="sensor-label">Parts Per Million</div>
+      </div>
+    </div>
+
+    <div class="controls-card">
+      <div class="control-group">
+        <h3>RELAY A</h3>
+        <div class="status-row">
+          Status: <span id="relayA-status" class="status-indicator status-off">OFF</span>
+        </div>
+        <div class="button-group">
+          <button class="control-button on" id="relayA-on">Turn ON</button>
+          <button class="control-button off" id="relayA-off">Turn OFF</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3>RELAY B</h3>
+        <div class="status-row">
+          Status: <span id="relayB-status" class="status-indicator status-off">OFF</span>
+        </div>
+        <div class="button-group">
+          <button class="control-button on" id="relayB-on">Turn ON</button>
+          <button class="control-button off" id="relayB-off">Turn OFF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Your existing JavaScript code here
+    const API_BASE_URL = 'http://localhost:3000';
+    let isConnected = true;
+
+    async function fetchMonitoringData() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/sensors`);
+        if (!response.ok) throw new Error('Network response was not ok');
+
+        const data = await response.json();
+        updateSensorValue('temperature', data.temperature, '°C');
+        updateSensorValue('humidity', data.humidity, '%');
+        updateSensorValue('tds', data.tds, 'PPM');
+
+        if (!isConnected) {
+          isConnected = true;
+          showConnectionStatus(true);
+        }
+      } catch (error) {
+        console.error('Error fetching monitoring data:', error);
+        isConnected = false;
+        showConnectionStatus(false);
+      }
+    }
+
+    function updateSensorValue(sensorId, value, unit) {
+      const element = document.getElementById(sensorId);
+      if (value !== null && value !== undefined) {
+        element.textContent = `${value}${unit}`;
+        element.classList.remove('loading-animation');
+      } else {
+        element.textContent = '--';
+        element.classList.add('loading-animation');
+      }
+    }
+
+    async function fetchRelayStatus() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/relays`);
+        if (!response.ok) throw new Error('Network response was not ok');
+
+        const data = await response.json();
+        updateRelayStatus('relayA', data.relayA);
+        updateRelayStatus('relayB', data.relayB);
+      } catch (error) {
+        console.error('Error fetching relay status:', error);
+      }
+    }
+
+    function updateRelayStatus(relay, status) {
+      const statusElement = document.getElementById(`${relay}-status`);
+      statusElement.textContent = status ? 'ON' : 'OFF';
+      statusElement.className = `status-indicator status-${status ? 'on' : 'off'}`;
+    }
+
+    async function controlRelay(relay, status) {
+      const button = document.getElementById(`${relay}-${status ? 'on' : 'off'}`);
+      button.disabled = true;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/relays`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ [relay]: status }),
+        });
+
+        if (!response.ok) throw new Error('Network response was not ok');
+
+        const data = await response.json();
+        updateRelayStatus(relay, data[relay]);
+      } catch (error) {
+        console.error('Error controlling relay:', error);
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    function showConnectionStatus(connected) {
+      const statusBar = document.getElementById('connection-status');
+      if (connected) {
+        statusBar?.remove();
+      } else if (!statusBar) {
+        const bar = document.createElement('div');
+        bar.id = 'connection-status';
+        bar.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; background-color: #ea4335; color: white; text-align: center; padding: 10px; z-index: 1001;';
+        bar.textContent = 'Connection lost. Attempting to reconnect...';
+        document.body.prepend(bar);
+      }
+    }
+
+    // Event Listeners
+    document.getElementById('relayA-on').addEventListener('click', () => controlRelay('relayA', true));
+    document.getElementById('relayA-off').addEventListener('click', () => controlRelay('relayA', false));
+    document.getElementById('relayB-on').addEventListener('click', () => controlRelay('relayB', true));
+    document.getElementById('relayB-off').addEventListener('click', () => controlRelay('relayB', false));
+
+    // Initialize and set up polling
+    function updateData() {
+      fetchMonitoringData();
+      fetchRelayStatus();
+    }
+
+    // Initial load
+    updateData();
+
+    // Set up polling every 5 seconds
+    setInterval(updateData, 5000);
+  </script>
 </body>
+
 </html>
